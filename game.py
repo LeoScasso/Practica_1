@@ -79,7 +79,7 @@ while fails < max_fails:
     for i,letter in enumerate(secret_word):
         if letter in guessed_letters:
             letters.append(letter)
-        elif i == 0 or i == len(secret_word):  #Evaluo si estoy parado en la primera o ultima palabra, para mostrarla
+        elif difficulty == "2" and (i == 0 or i == len(secret_word)):  #Evaluo si estoy parado en la primera o ultima palabra, para mostrarla
             letters.append(letter)
         else:
             letters.append("_")
