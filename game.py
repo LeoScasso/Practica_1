@@ -12,11 +12,36 @@ max_fails = 6
 fails = 0
 # Lista para almacenar las letras adivinadas
 guessed_letters = []
-
+#Vocales
+vowels = ["a","e","i","o","u","á","é","í","ó","ú"]
 print("¡Bienvenido al juego de adivinanzas!")
 print("Estoy pensando en una palabra. ¿Puedes adivinar cuál es?")
 print(f"Solo tienes {max_fails} vidas!")
-word_displayed = "_" * len(secret_word)
+
+# Menu de dificultades
+menu = """ Seleccione el número de dificultad:
+                1--> Facil (Vocales descubiertas)
+                2--> Medio (Primer y ultima letra descubierta)
+                3--> Dificil (Ninguna letra descubierta)
+    """
+difficulty = input(menu)
+
+match difficulty:
+    case "1":
+        guessed_letters.extend(vowels)
+        letters = []
+        for letter in secret_word:
+            if letter in guessed_letters:
+                letters.append(letter)
+            else:
+                letters.append("_")
+        word_displayed = "".join(letters)
+    case "2":
+        revelated_words = (secret_word[0],secret_word[-1])
+        word_displayed= (revelated_words[0] + "_" * (len(secret_word)-2)+revelated_words[1])
+    case "3":
+        word_displayed = "_" * len(secret_word)
+
 # Mostrarla palabra parcialmente adivinada
 print(f"Palabra: {word_displayed}")
 
@@ -25,9 +50,13 @@ while fails < max_fails:
     letter = input("Ingresa una letra: ").lower()
     while letter == "":            # En caso de no insertar letra, insisto al usuario sin contarlo como intento
         letter = input("Valor inválido, por favor ingrese otro: ").lower()
+  
     # Verificar si la letra ya ha sido adivinada
     if letter in guessed_letters:
-        print("Ya has intentado con esa letra. Intenta con otra.")
+        if (difficulty == "1") and (letter in vowels):
+            print("¡ TODAS las vocales ya estan descubiertas en esta dificultad!")    
+        else:
+            print("Ya has intentado con esa letra. Intenta con otra.")
         fails +=1
         print(f"¡Has perdido una vida! Te quedan {max_fails - fails} restantes.")
         continue
@@ -46,8 +75,11 @@ while fails < max_fails:
 
     # Mostrar la palabra parcialmente adivinada
     letters = []
-    for letter in secret_word:
+    count = 0
+    for i,letter in enumerate(secret_word):
         if letter in guessed_letters:
+            letters.append(letter)
+        elif i == 0 or i == len(secret_word):  #Evaluo si estoy parado en la primera o ultima palabra, para mostrarla
             letters.append(letter)
         else:
             letters.append("_")
